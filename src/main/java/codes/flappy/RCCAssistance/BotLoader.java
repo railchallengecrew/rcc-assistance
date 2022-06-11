@@ -1,6 +1,11 @@
 package codes.flappy.RCCAssistance;
 
-import codes.flappy.RCCAssistance.command.CommandListener;
+import codes.flappy.RCCAssistance.command.CommandExecutor;
+import codes.flappy.RCCAssistance.command.CommandMapper;
+import codes.flappy.RCCAssistance.command.LegacyCommandListener;
+import codes.flappy.RCCAssistance.command.freeze.FreezeCommandsExecutor;
+import codes.flappy.RCCAssistance.command.status.StatusCommandsExecutor;
+import codes.flappy.RCCAssistance.command.verification.VerificationListener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -10,16 +15,26 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class BotLoader extends ListenerAdapter {
     private static final Logger logger = Logger.getLogger("BotLoader");
 
+    private static final HashMap<String, CommandExecutor> commandMappings = new HashMap<>() {{
+        put("freeze", new FreezeCommandsExecutor());
+        put("unfreeze", new FreezeCommandsExecutor());
+
+        put("status_playing", new StatusCommandsExecutor());
+        put("status_listening", new StatusCommandsExecutor());
+        put("status_watching", new StatusCommandsExecutor());
+    }};
+
     public static void main(String[] args) {
         logger.info("Bot is starting...");
 
         JDABuilder builder = JDABuilder.create(System.getenv("RCC_BOT_TOKEN"), GatewayIntent.GUILD_MESSAGES)
-                .addEventListeners(new BotLoader(), new CommandListener());
+                .addEventListeners(new BotLoader(), new LegacyCommandListener(), new CommandMapper(commandMappings), new VerificationListener());
                 //.setActivity(Activity.listening("/help or ping"));
 
         try {
@@ -51,6 +66,8 @@ public class BotLoader extends ListenerAdapter {
                 //Commands.slash("verify", "Verify that you understand the rules. Required to access the server."),
                 Commands.slash("verify_channel", "Set the verification channel.")
                         .addOption(OptionType.CHANNEL, "channel", "The channel for the button", true),
+                Commands.slash("verify_role", "Set the verification role.")
+                        .addOption(OptionType.MENTIONABLE, "role", "The role to be given on verification", true),
                 // END VERIFICATION COMMAND
 
 
