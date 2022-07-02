@@ -1,1 +1,1 @@
-worker: java -jar build/libs/GreenwoodManagementBot-1.0-all.jar
+worker: java -jar build/libs/RCCAssistance-1.0-all.jar
