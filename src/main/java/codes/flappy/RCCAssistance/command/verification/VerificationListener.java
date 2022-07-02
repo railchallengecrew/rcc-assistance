@@ -38,7 +38,6 @@ public class VerificationListener extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
         if (e.getComponentId().equals("verify")) {
-            e.deferReply().queue();
 
             try {
                 Objects.requireNonNull(e.getMember()).getGuild().addRoleToMember(
@@ -49,14 +48,14 @@ public class VerificationListener extends ListenerAdapter {
                                 ).getRoleById(verifRoleId)
                         )
                 ).complete();
-                e.getHook().sendMessageEmbeds(ResponseEmbedBuilder.successResponseEmbedBuilder()
+                e.replyEmbeds(ResponseEmbedBuilder.successResponseEmbedBuilder()
                         .setDescription(e.getMember().getAsMention()+", I gave you access to the rest of the server.").build()).setEphemeral(true).queue();
             } catch(NullPointerException ex) {
-                e.getHook().sendMessageEmbeds(ResponseEmbedBuilder.errorResponseEmbedBuilder()
+                e.replyEmbeds(ResponseEmbedBuilder.errorResponseEmbedBuilder()
                         .setDescription(e.getMember().getAsMention()+", I couldn't add you to the role.\nIf you are a server admin, please make sure that your verification role is configured.\n\n`Verification Role ID: "+verifRoleId+"`")
                         .setFooter("NullPointerException@VerifyListener:onButtonInteraction").build()).queue();
             } catch(HierarchyException ex) {
-                e.getHook().sendMessageEmbeds(ResponseEmbedBuilder.errorResponseEmbedBuilder()
+                e.replyEmbeds(ResponseEmbedBuilder.errorResponseEmbedBuilder()
                         .setDescription(e.getMember().getAsMention()+", I couldn't add you to the role because I can't modify your user as you have higher permissions than me!")
                         .setFooter("HierarchyException@VerifyListener:onButtonInteraction").build()).queue();
             }
