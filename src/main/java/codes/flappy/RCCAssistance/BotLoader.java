@@ -55,10 +55,7 @@ public class BotLoader extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent e) {
         logger.info("Registering commands...");
 
-        // register guild commands
-        // these commands will only be registered in RCC Testing
-        // TODO: Change this before adding to main server
-        e.getJDA().getGuildById(964965253458837645L).updateCommands().addCommands(
+        e.getJDA().updateCommands().addCommands(
                 Commands.slash("help", "Stop it. Get some help."),
 
                 // BOT CONTROLS (ADMIN ONLY)
