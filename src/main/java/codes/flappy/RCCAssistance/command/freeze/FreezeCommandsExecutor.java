@@ -21,9 +21,7 @@ public class FreezeCommandsExecutor extends CommandExecutor {
                     e.replyEmbeds(ResponseEmbedBuilder.successResponseEmbedBuilder()
                             .setDescription("I've unfrozen all commands.").build()).setEphemeral(true).queue();
                 }
-                default -> {
-                    throw new UnknownCommandException("Unknown command in " + getClass().toString());
-                }
+                default -> throw new UnknownCommandException("Unknown command in " + getClass().toString());
             }
         } else {
             e.replyEmbeds(ResponseEmbedBuilder.permErrorResponseEmbedBuilder()
