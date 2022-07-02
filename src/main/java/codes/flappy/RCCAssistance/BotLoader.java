@@ -5,6 +5,7 @@ import codes.flappy.RCCAssistance.command.CommandMapper;
 import codes.flappy.RCCAssistance.command.LegacyCommandListener;
 import codes.flappy.RCCAssistance.command.freeze.FreezeCommandsExecutor;
 import codes.flappy.RCCAssistance.command.status.StatusCommandsExecutor;
+import codes.flappy.RCCAssistance.command.verification.VerificationCommandsExecutor;
 import codes.flappy.RCCAssistance.command.verification.VerificationListener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -24,6 +25,9 @@ public class BotLoader extends ListenerAdapter {
     private static final HashMap<String, CommandExecutor> commandMappings = new HashMap<>() {{
         put("freeze", new FreezeCommandsExecutor());
         put("unfreeze", new FreezeCommandsExecutor());
+
+        put("verify_channel", new VerificationCommandsExecutor());
+        put("verify_role", new VerificationCommandsExecutor());
 
         put("status_playing", new StatusCommandsExecutor());
         put("status_listening", new StatusCommandsExecutor());
@@ -65,7 +69,10 @@ public class BotLoader extends ListenerAdapter {
                 // TODO VERIFICATION COMMAND (NOT A COMMAND, USE INTERACTION BUTTON)
                 //Commands.slash("verify", "Verify that you understand the rules. Required to access the server."),
                 Commands.slash("verify_channel", "Set the verification channel.")
-                        .addOption(OptionType.CHANNEL, "channel", "The channel for the button", true),
+                        .addOption(OptionType.CHANNEL, "channel", "The channel for the button", true)
+                        .addOption(OptionType.STRING, "title", "The title for the embed")
+                        .addOption(OptionType.STRING, "description", "The description for the embed")
+                        .addOption(OptionType.STRING, "button_msg", "The text on the action button"),
                 Commands.slash("verify_role", "Set the verification role.")
                         .addOption(OptionType.MENTIONABLE, "role", "The role to be given on verification", true),
                 // END VERIFICATION COMMAND
