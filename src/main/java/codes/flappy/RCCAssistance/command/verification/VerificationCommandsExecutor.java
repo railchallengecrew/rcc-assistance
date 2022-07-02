@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class VerificationCommandsExecutor extends CommandExecutor {
     public void onSlashCommand(SlashCommandInteractionEvent e) throws UnknownCommandException {
-        //e.deferReply().setEphemeral(true).queue();
-
         if (e.getMember().hasPermission(Permission.ADMINISTRATOR)) {
             switch (e.getName()) {
                 case "verify_channel" -> {

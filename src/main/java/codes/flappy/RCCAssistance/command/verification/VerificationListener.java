@@ -6,13 +6,34 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class VerificationListener extends ListenerAdapter {
     private static long verifRoleId = 0L;
 
-    protected static void setVerifRoleId(long l) { verifRoleId = l; }
+    protected static void setVerifRoleId(long l) {
+        verifRoleId = l;
+        try(DataOutputStream dout = new DataOutputStream(new FileOutputStream("verification.dat"))) {
+            dout.writeLong(l);
+        } catch(FileNotFoundException ex) {
+            Logger.getLogger("VerificationListener").warning("Could not write to verification.dat file (FileNotFoundException): "+ex.getMessage());
+        } catch(IOException ex) {
+            Logger.getLogger("VerificationListener").warning("Could not write to verification.dat file (IOException): "+ex.getMessage());
+        }
+    }
 
+    public VerificationListener() {
+        // try to load values from verification.dat
+        try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
+            verifRoleId = in.readLong();
+            Logger.getLogger("VerificationListener").info("Read long from verification.dat: "+in.readLong());
+        } catch(FileNotFoundException ignored) {}
+        catch(IOException ex) {
+            Logger.getLogger("VerificationListener").warning("Could not load verification.dat file: " + ex.getMessage());
+        }
+    }
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
