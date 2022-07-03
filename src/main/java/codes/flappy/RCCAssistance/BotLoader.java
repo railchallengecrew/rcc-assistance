@@ -63,7 +63,6 @@ public class BotLoader extends ListenerAdapter {
                 Commands.slash("unfreeze", "Unfreeze the bot, unblocking all commands. (admin only)"),
                 // END BOT CONTROLS
 
-                // TODO VERIFICATION COMMAND (NOT A COMMAND, USE INTERACTION BUTTON)
                 //Commands.slash("verify", "Verify that you understand the rules. Required to access the server."),
                 Commands.slash("verify_channel", "Set the verification channel.")
                         .addOption(OptionType.CHANNEL, "channel", "The channel for the button", true)
