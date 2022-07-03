@@ -39,7 +39,6 @@ public class BotLoader extends ListenerAdapter {
 
         JDABuilder builder = JDABuilder.create(System.getenv("RCC_BOT_TOKEN"), GatewayIntent.GUILD_MESSAGES)
                 .addEventListeners(new BotLoader(), new LegacyCommandListener(), new CommandMapper(commandMappings), new VerificationListener());
-                //.setActivity(Activity.listening("/help or ping"));
 
         try {
             builder.build();
