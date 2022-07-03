@@ -4,6 +4,8 @@ import codes.flappy.RCCAssistance.command.CommandExecutor;
 import codes.flappy.RCCAssistance.command.CommandMapper;
 import codes.flappy.RCCAssistance.command.LegacyCommandListener;
 import codes.flappy.RCCAssistance.command.freeze.FreezeCommandsExecutor;
+import codes.flappy.RCCAssistance.command.lock.LockCommandsExecutor;
+import codes.flappy.RCCAssistance.command.lock.LockListener;
 import codes.flappy.RCCAssistance.command.status.StatusCommandsExecutor;
 import codes.flappy.RCCAssistance.command.verification.VerificationCommandsExecutor;
 import codes.flappy.RCCAssistance.command.verification.VerificationListener;
@@ -32,12 +34,16 @@ public class BotLoader extends ListenerAdapter {
         put("status_playing", new StatusCommandsExecutor());
         put("status_listening", new StatusCommandsExecutor());
         put("status_watching", new StatusCommandsExecutor());
+
+        put("lock", new LockCommandsExecutor());
+        put("unlock", new LockCommandsExecutor());
     }};
 
     public static void main(String[] args) {
         logger.info("Bot is starting...");
 
         JDABuilder builder = JDABuilder.create(System.getenv("RCC_BOT_TOKEN"), GatewayIntent.GUILD_MESSAGES)
+                .addEventListeners(new BotLoader(), new LegacyCommandListener(), new CommandMapper(commandMappings), new VerificationListener(), new LockListener());
                 .addEventListeners(new BotLoader(), new LegacyCommandListener(), new CommandMapper(commandMappings), new VerificationListener());
 
         try {
@@ -72,11 +78,10 @@ public class BotLoader extends ListenerAdapter {
                         .addOption(OptionType.MENTIONABLE, "role", "The role to be given on verification", true),
                 // END VERIFICATION COMMAND
 
-
-                // TODO LOCK COMMAND (MOD ONLY)
                 Commands.slash("lock", "Lock a channel.")
-                        .addOption(OptionType.CHANNEL, "channel", "The channel to lock", true)
-                        .addOption(OptionType.STRING, "reason", "The reason the channel is locked"),
+                        .addOption(OptionType.CHANNEL, "channel", "The channel to lock", true),
+                Commands.slash("unlock", "Unlock a channel.")
+                        .addOption(OptionType.CHANNEL, "channel", "The channel to unlock", true),
 
 
                 // REACTION ROLE COMMANDS
