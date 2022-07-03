@@ -18,9 +18,9 @@ public class VerificationListener extends ListenerAdapter {
         try(DataOutputStream dout = new DataOutputStream(new FileOutputStream("verification.dat"))) {
             dout.writeLong(l);
         } catch(FileNotFoundException ex) {
-            Logger.getLogger("VerificationListener").warning("Could not write to verification.dat file (FileNotFoundException): "+ex.getMessage());
+            Logger.getLogger(VerificationListener.class.getName()).warning("Could not write to verification.dat file (FileNotFoundException): "+ex.getMessage());
         } catch(IOException ex) {
-            Logger.getLogger("VerificationListener").warning("Could not write to verification.dat file (IOException): "+ex.getMessage());
+            Logger.getLogger(VerificationListener.class.getName()).warning("Could not write to verification.dat file (IOException): "+ex.getMessage());
         }
     }
 
@@ -28,10 +28,10 @@ public class VerificationListener extends ListenerAdapter {
         // try to load values from verification.dat
         try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
             verifRoleId = in.readLong();
-            Logger.getLogger("VerificationListener").info("Read long from verification.dat: "+in.readLong());
+            Logger.getLogger(VerificationListener.class.getName()).info("Read long from verification.dat: "+in.readLong());
         } catch(FileNotFoundException ignored) {}
         catch(IOException ex) {
-            Logger.getLogger("VerificationListener").warning("Could not load verification.dat file: " + ex.getMessage());
+            Logger.getLogger(VerificationListener.class.getName()).warning("Could not load verification.dat file: " + ex.getMessage());
         }
     }
 
