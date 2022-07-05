@@ -31,8 +31,15 @@ public class VerificationCommandsExecutor extends CommandExecutor {
 
                 }
                 case "verify_role" -> {
-                    VerificationListener.setVerifRoleId(Long.parseLong(e.getOption("role").getAsRole().getId()));
-                    e.replyEmbeds(ResponseEmbedBuilder.successResponseEmbedBuilder().setDescription("I've added the verification role.").build()).setEphemeral(true).queue();
+                    if (VerificationListener.getVerifRoleSetByEnv()) {
+                        e.replyEmbeds(ResponseEmbedBuilder.errorResponseEmbedBuilder()
+                                .setTitle("Cannot modify")
+                                .setDescription("The verification role is already set by the system environment variable `VERIFY_ROLE_ID`. Please contact the server admins for more info.")
+                                .build()).setEphemeral(true).queue();
+                    } else {
+                        VerificationListener.setVerifRoleId(Long.parseLong(e.getOption("role").getAsRole().getId()));
+                        e.replyEmbeds(ResponseEmbedBuilder.successResponseEmbedBuilder().setDescription("I've added the verification role.").build()).setEphemeral(true).queue();
+                    }
                 }
                 default -> throw new UnknownCommandException("Unknown command in " + getClass().toString());
             }
