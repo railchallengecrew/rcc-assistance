@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 public class VerificationListener extends ListenerAdapter {
     private static long verifRoleId = 0L;
+    private static boolean verifRoleSetByEnv = false;
+    public static boolean getVerifRoleSetByEnv() { return verifRoleSetByEnv; }
 
     protected static void setVerifRoleId(long l) {
         verifRoleId = l;
@@ -25,14 +27,24 @@ public class VerificationListener extends ListenerAdapter {
     }
 
     public VerificationListener() {
-        // try to load values from verification.dat
-        try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
-            verifRoleId = in.readLong();
-            Logger.getLogger(VerificationListener.class.getName()).info("Read long from verification.dat: "+in.readLong());
-        } catch(FileNotFoundException ignored) {}
-        catch(IOException ex) {
-            Logger.getLogger(VerificationListener.class.getName()).warning("Could not load verification.dat file: " + ex.getMessage());
+        // first check environment variables
+        if (System.getenv("VERIFY_ROLE_ID") != null) {
+            verifRoleSetByEnv = true;
+            verifRoleId = Long.parseLong(System.getenv("VERIFY_ROLE_ID"));
+            Logger.getLogger(VerificationListener.class.getName()).info("Verification role set by environment");
+        } else {
+            verifRoleSetByEnv = false;
+            // try to load values from verification.dat
+            try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
+                verifRoleId = in.readLong();
+                Logger.getLogger(VerificationListener.class.getName()).info("Read long from verification.dat: "+in.readLong());
+            } catch(FileNotFoundException ignored) {}
+            catch(IOException ex) {
+                Logger.getLogger(VerificationListener.class.getName()).warning("Could not load verification.dat file: " + ex.getMessage());
+            }
         }
+
+        Logger.getLogger(VerificationListener.class.getName()).info("Verification role id is set to "+verifRoleId);
     }
 
     @Override
