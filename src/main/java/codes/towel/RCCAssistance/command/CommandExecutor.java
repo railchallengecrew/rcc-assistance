@@ -1,4 +1,4 @@
-package codes.flappy.RCCAssistance.command;
+package codes.towel.RCCAssistance.command;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

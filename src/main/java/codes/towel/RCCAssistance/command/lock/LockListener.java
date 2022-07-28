@@ -1,4 +1,4 @@
-package codes.flappy.RCCAssistance.command.lock;
+package codes.towel.RCCAssistance.command.lock;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Channel;

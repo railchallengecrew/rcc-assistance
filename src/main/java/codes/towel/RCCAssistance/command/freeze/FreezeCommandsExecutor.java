@@ -1,9 +1,9 @@
-package codes.flappy.RCCAssistance.command.freeze;
+package codes.towel.RCCAssistance.command.freeze;
 
-import codes.flappy.RCCAssistance.ResponseEmbedBuilder;
-import codes.flappy.RCCAssistance.command.CommandExecutor;
-import codes.flappy.RCCAssistance.command.CommandMapper;
-import codes.flappy.RCCAssistance.command.UnknownCommandException;
+import codes.towel.RCCAssistance.ResponseEmbedBuilder;
+import codes.towel.RCCAssistance.command.CommandExecutor;
+import codes.towel.RCCAssistance.command.CommandMapper;
+import codes.towel.RCCAssistance.command.UnknownCommandException;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

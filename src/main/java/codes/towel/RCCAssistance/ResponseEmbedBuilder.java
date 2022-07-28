@@ -1,4 +1,4 @@
-package codes.flappy.RCCAssistance;
+package codes.towel.RCCAssistance;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 

@@ -1,4 +1,4 @@
-package codes.flappy.RCCAssistance.command;
+package codes.towel.RCCAssistance.command;
 
 public class UnknownCommandException extends Exception {
     public UnknownCommandException(String s) {

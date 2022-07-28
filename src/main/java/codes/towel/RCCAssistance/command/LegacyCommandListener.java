@@ -1,6 +1,6 @@
-package codes.flappy.RCCAssistance.command;
+package codes.towel.RCCAssistance.command;
 
-import codes.flappy.RCCAssistance.ResponseEmbedBuilder;
+import codes.towel.RCCAssistance.ResponseEmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

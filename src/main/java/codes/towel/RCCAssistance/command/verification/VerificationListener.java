@@ -1,6 +1,6 @@
-package codes.flappy.RCCAssistance.command.verification;
+package codes.towel.RCCAssistance.command.verification;
 
-import codes.flappy.RCCAssistance.ResponseEmbedBuilder;
+import codes.towel.RCCAssistance.ResponseEmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

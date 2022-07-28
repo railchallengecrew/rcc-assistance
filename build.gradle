@@ -4,7 +4,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-group 'codes.flappy'
+group 'codes.towel'
 version '1.0'
 
 repositories {
@@ -22,5 +22,5 @@ test {
 }
 
 application {
-    mainClass = "codes.flappy.RCCAssistance.BotLoader"
+    mainClass = "codes.towel.RCCAssistance.BotLoader"
 }
