@@ -9,7 +9,7 @@ public class LegacyCommandListener extends ListenerAdapter {
         if (e.getMessage().getMentionedUsers().contains(e.getJDA().getSelfUser())) {
             e.getMessage().replyEmbeds(ResponseEmbedBuilder.responseEmbedBuilder()
                     .setTitle("Need some help?")
-                    .setDescription("Take a look at http://rcc-assistance.docs.flappy.codes").build()).queue();
+                    .setDescription("Take a look at http://rcc-assistance.docs.towel.codes").build()).queue();
         }
     }
 }
