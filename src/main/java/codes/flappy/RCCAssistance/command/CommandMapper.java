@@ -20,7 +20,7 @@ public class CommandMapper extends ListenerAdapter {
         if (e.getName().equals("help")) {
             e.replyEmbeds(ResponseEmbedBuilder.responseEmbedBuilder()
                     .setTitle("Need some help?")
-                    .setDescription("Take a look at http://rcc-assistance.docs.flappy.codes").build()).setEphemeral(true).queue();
+                    .setDescription("Take a look at http://rcc-assistance.docs.towel.codes").build()).setEphemeral(true).queue();
             return;
         }
 
