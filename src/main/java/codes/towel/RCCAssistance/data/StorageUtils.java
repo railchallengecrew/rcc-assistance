@@ -19,11 +19,19 @@ public class StorageUtils {
         mode = StorageMode.LOCAL;
     }
 
-    public static void saveObject(String collection, String id, String key, Object object) throws IllegalStateException {
+    public static void setObject(String collection, String id, String key, Object object) throws IllegalStateException {
         if (mode==StorageMode.DB) {
             DBUtils.setObject(collection, id, key, object);
         } else {
-            LocalStorageUtils.setObject(collection+"."+id+"."+key+".", object);
+            LocalStorageUtils.setObject(collection+"."+id+"."+key, object);
+        }
+    }
+
+    public static void getObject(String collection, String id, String key) throws IllegalStateException {
+        if (mode==StorageMode.DB) {
+            DBUtils.getObject(collection, id, key);
+        } else {
+            LocalStorageUtils.getObject(collection+"."+id+"."+key);
         }
     }
 
