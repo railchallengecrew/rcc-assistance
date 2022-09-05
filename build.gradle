@@ -12,9 +12,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.yaml:snakeyaml:1.30'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation "net.dv8tion:JDA:5.0.0-alpha.9"
+    implementation 'org.mongodb:mongo-java-driver:2.12.3'
 }
 
 test {

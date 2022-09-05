@@ -9,6 +9,7 @@ import codes.towel.RCCAssistance.command.lock.LockListener;
 import codes.towel.RCCAssistance.command.status.StatusCommandsExecutor;
 import codes.towel.RCCAssistance.command.verification.VerificationCommandsExecutor;
 import codes.towel.RCCAssistance.command.verification.VerificationListener;
+import codes.towel.RCCAssistance.data.StorageUtils;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,9 +18,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -42,9 +47,59 @@ public class BotLoader extends ListenerAdapter {
     }};
 
     public static void main(String[] args) {
+        if (System.getenv("RCC_DB_HOSTNAME")!=null) {
+            logger.info("Storage mode set to REMOTE because RCC_DB_HOSTNAME is set in the system environment.");
+
+            // if the required env variables are not set
+            if (System.getenv("RCC_DB_USERNAME")==null) {
+                logger.severe("RCC_DB_USERNAME is NOT set! Cannot connect to MongoDB without a username.");
+                System.exit(1);
+            } if (System.getenv("RCC_DB_PASSWORD")==null) {
+                logger.severe("RCC_DB_PASSWORD is NOT set! Cannot connect to MongoDB without a password.");
+                System.exit(1);
+            } if (System.getenv("RCC_DB_NAME")==null) {
+                logger.severe("RCC_DB_NAME is NOT set! Cannot connect to MongoDB without a DB name.");
+                System.exit(1);
+            }
+
+
+            logger.info("Connecting to "+System.getenv("RCC_DB_HOSTNAME")+" as user "+System.getenv("RCC_DB_USERNAME")+"...");
+
+            try {
+                MongoClient dbClient = new MongoClient(new MongoClientURI(System.getenv("RCC_DB_HOSTNAME")));
+                StorageUtils.setupDB(dbClient);
+            }
+            catch(UnknownHostException ex) {
+                logger.severe("Could not connect MongoDB: unknown host!");
+                logger.severe("UnknownHostException: "+ex.getMessage());
+                ex.printStackTrace();
+                System.exit(1);
+            }
+
+        } else {
+            logger.info("Storage mode set to LOCAL.");
+            if (System.getenv("RCC_LOCAL_FILE")==null) {
+                logger.severe("Could not use local storage because RCC_LOCAL_FILE is NOT set!");
+                System.exit(1);
+            } else {
+                try {
+                    StorageUtils.setupLocal(new File(System.getenv("RCC_LOCAL_FILE")));
+                } catch(IOException ex) {
+                    logger.severe("IOException while setting up local storage: "+ex.getMessage());
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+            }
+        }
+
         logger.info("Bot is starting...");
 
         JDABuilder builder = JDABuilder.create(System.getenv("RCC_BOT_TOKEN"), GatewayIntent.GUILD_MESSAGES)
+                .disableCache(CacheFlag.ACTIVITY)
+                .disableCache(CacheFlag.VOICE_STATE)
+                .disableCache(CacheFlag.EMOTE)
+                .disableCache(CacheFlag.CLIENT_STATUS)
+                .disableCache(CacheFlag.ONLINE_STATUS)
                 .addEventListeners(new BotLoader(), new LegacyCommandListener(), new CommandMapper(commandMappings), new VerificationListener(), new LockListener());
 
         try {

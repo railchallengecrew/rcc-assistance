@@ -6,6 +6,13 @@ Discord RCC Assistance bot written in Java.
 
 `VERIFY_ROLE_ID` (optional) Overrides the verification role that should be used by the verification button. If this is set, the verification role cannot be set with the command `/verify_role <ROLE:role>`.
 
-**Under development. Many features are unfinshed. May be very buggy.**
+`RCC_DB_HOSTNAME` (optional) If set, disables saving .dat files locally and instead saves to a remote database **(MongoDB only)**. This should be the address to connect to the db, including the port. Example value: `127.0.0.1:27017`
 
-Documentation avalible at [rcc-assistance.docs.flappy.codes](http://rcc-assistance.docs.flappy.codes).
+`RCC_DB_NAME` (required if using database connection) Sets the database name to use. **If `RCC_DB_HOSTNAME` is set, but this is not provided, the bot will not start.**
+
+`RCC_DB_USERNAME` (required if using database connection) Sets the username to connect to the MongoDB database. **If `RCC_DB_HOSTNAME` is set, but this is not provided, the bot will not start.**
+
+`RCC_DB_PASSWORD` (required if using database connection) Sets the password to connect to the MongoDB database. **If `RCC_DB_HOSTNAME` is set, but this is not provided, the bot will not start.**
+
+`RCC_LOCAL_FILE` (required if NOT using database connection) Sets the local file which data will be saved to. It will be saved in YAML format, so you should use .yaml as the file extension.
+

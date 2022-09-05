@@ -31,16 +31,16 @@ public class VerificationListener extends ListenerAdapter {
         if (System.getenv("VERIFY_ROLE_ID") != null) {
             verifRoleSetByEnv = true;
             verifRoleId = Long.parseLong(System.getenv("VERIFY_ROLE_ID"));
-            Logger.getLogger(VerificationListener.class.getName()).info("Verification role set by environment");
+            Logger.getLogger("VerificationListener").info("Verification role set by environment");
         } else {
             verifRoleSetByEnv = false;
             // try to load values from verification.dat
             try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
                 verifRoleId = in.readLong();
-                Logger.getLogger(VerificationListener.class.getName()).info("Read long from verification.dat: "+in.readLong());
+                Logger.getLogger("VerificationListener").info("Read long from verification.dat: "+in.readLong());
             } catch(FileNotFoundException ignored) {}
             catch(IOException ex) {
-                Logger.getLogger(VerificationListener.class.getName()).warning("Could not load verification.dat file: " + ex.getMessage());
+                Logger.getLogger("VerificationListener").warning("Could not load verification.dat file: " + ex.getMessage());
             }
         }
 
