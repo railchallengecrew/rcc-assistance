@@ -1,29 +1,23 @@
 package codes.towel.RCCAssistance.command.verification;
 
 import codes.towel.RCCAssistance.ResponseEmbedBuilder;
+import codes.towel.RCCAssistance.data.StorageUtils;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class VerificationListener extends ListenerAdapter {
-    private static long verifRoleId = 0L;
+    private static Long verifRoleId = 0L;
     private static boolean verifRoleSetByEnv = false;
     public static boolean getVerifRoleSetByEnv() { return verifRoleSetByEnv; }
 
     protected static void setVerifRoleId(long l) {
-        verifRoleId = l;
-        try(DataOutputStream dout = new DataOutputStream(new FileOutputStream("verification.dat"))) {
-            dout.writeLong(l);
-        } catch(FileNotFoundException ex) {
-            Logger.getLogger(VerificationListener.class.getName()).warning("Could not write to verification.dat file (FileNotFoundException): "+ex.getMessage());
-        } catch(IOException ex) {
-            Logger.getLogger(VerificationListener.class.getName()).warning("Could not write to verification.dat file (IOException): "+ex.getMessage());
-        }
+        VerificationListener.verifRoleId = l;
+        StorageUtils.setObject("VerificationListener", "Verification", "VerifRoleId", VerificationListener.verifRoleId);
     }
 
     public VerificationListener() {
@@ -35,13 +29,8 @@ public class VerificationListener extends ListenerAdapter {
         } else {
             verifRoleSetByEnv = false;
             // try to load values from verification.dat
-            try(DataInputStream in = new DataInputStream(new FileInputStream("verification.dat"))) {
-                verifRoleId = in.readLong();
-                Logger.getLogger("VerificationListener").info("Read long from verification.dat: "+in.readLong());
-            } catch(FileNotFoundException ignored) {}
-            catch(IOException ex) {
-                Logger.getLogger("VerificationListener").warning("Could not load verification.dat file: " + ex.getMessage());
-            }
+            Logger.getLogger("VerificationListener").info("\n"+ StorageUtils.getObject("VerificationListener", "Verification", "VerifRoleId"));
+            VerificationListener.verifRoleId = (Long) StorageUtils.getObject("VerificationListener", "Verification", "VerifRoleId");
         }
 
         Logger.getLogger(VerificationListener.class.getName()).info("Verification role id is set to "+verifRoleId);

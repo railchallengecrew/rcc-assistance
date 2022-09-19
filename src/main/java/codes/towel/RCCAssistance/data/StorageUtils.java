@@ -1,9 +1,11 @@
 package codes.towel.RCCAssistance.data;
 
 import com.mongodb.MongoClient;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class StorageUtils {
 
@@ -23,15 +25,22 @@ public class StorageUtils {
         if (mode==StorageMode.DB) {
             DBUtils.setObject(collection, id, key, object);
         } else {
-            LocalStorageUtils.setObject(collection+"."+id+"."+key, object);
+            try {
+                LocalStorageUtils.setObject(collection + "." + id + "." + key, object);
+            } catch(IOException ex) {
+                Logger.getLogger("StorageUtils").warning("IOException setting object: "+ex.getMessage());
+                Logger.getLogger("StorageUtils").warning("Saving to JVM memory instead.");
+                LocalStorageUtils.setObjectWithoutSave(collection + "." + id + key, object);
+            }
         }
     }
 
-    public static void getObject(String collection, String id, String key) throws IllegalStateException {
+    @Nullable
+    public static Object getObject(String collection, String id, String key) throws IllegalStateException {
         if (mode==StorageMode.DB) {
-            DBUtils.getObject(collection, id, key);
+            return DBUtils.getObject(collection, id, key);
         } else {
-            LocalStorageUtils.getObject(collection+"."+id+"."+key);
+            return LocalStorageUtils.getObject(collection+"."+id+"."+key);
         }
     }
 

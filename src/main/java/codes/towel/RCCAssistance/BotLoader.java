@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 public class BotLoader extends ListenerAdapter {
@@ -46,7 +49,8 @@ public class BotLoader extends ListenerAdapter {
         put("unlock", new LockCommandsExecutor());
     }};
 
-    public static void main(String[] args) {
+
+    private static void setupStorage() {
         if (System.getenv("RCC_DB_HOSTNAME")!=null) {
             logger.info("Storage mode set to REMOTE because RCC_DB_HOSTNAME is set in the system environment.");
 
@@ -74,6 +78,8 @@ public class BotLoader extends ListenerAdapter {
                 logger.severe("UnknownHostException: "+ex.getMessage());
                 ex.printStackTrace();
                 System.exit(1);
+            } finally {
+                logger.info("DB storage set up OK!");
             }
 
         } else {
@@ -88,12 +94,14 @@ public class BotLoader extends ListenerAdapter {
                     logger.severe("IOException while setting up local storage: "+ex.getMessage());
                     ex.printStackTrace();
                     System.exit(1);
+                } finally {
+                    logger.info("Local storage set up OK!");
                 }
             }
         }
+    }
 
-        logger.info("Bot is starting...");
-
+    private static void setupBot() {
         JDABuilder builder = JDABuilder.create(System.getenv("RCC_BOT_TOKEN"), GatewayIntent.GUILD_MESSAGES)
                 .disableCache(CacheFlag.ACTIVITY)
                 .disableCache(CacheFlag.VOICE_STATE)
@@ -111,6 +119,20 @@ public class BotLoader extends ListenerAdapter {
         }
 
         logger.info("Bot is built.");
+    }
+
+    public static void main(String[] args) {
+        ExecutorService threadPool = Executors.newCachedThreadPool();
+
+        logger.info("Setting up storage...");
+        Future<?> futureTask = threadPool.submit(BotLoader::setupStorage);
+        System.out.print("Storage [#");
+        while (!futureTask.isDone()) {
+            //System.out.print("#");
+        } System.out.println("#]");
+        logger.info("Storage is ready.\nSetting up bot...");
+        setupBot();
+        logger.info("Bot is awaiting connection...");
     }
 
     public void onReady(@NotNull ReadyEvent e) {

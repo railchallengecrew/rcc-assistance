@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -13,6 +14,8 @@ public class LocalStorageUtils {
     private static Yaml yaml;
     private static File sfile;
     private static Map<String, Object> data;
+
+    private static final Logger logger = Logger.getLogger("LocalStorageUtils");
 
     /**
      * Attempts to load data from the given File. If this File does not exist, it will be created.
@@ -24,13 +27,14 @@ public class LocalStorageUtils {
     protected static void loadData(@NotNull File file) throws NullPointerException, IOException, SecurityException {
         Objects.requireNonNull(file, "file cannot be null");
 
-        LocalStorageUtils.sfile = file;
+        sfile = file;
         //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
 
         try (InputStream in = new FileInputStream(file)) {
             yaml = new Yaml();
-            LocalStorageUtils.data = yaml.load(in);
+            data = yaml.load(in);
+            if (data == null) { data = new HashMap<>(); }
         }
 
         Logger.getLogger("LocalStorageUtils").info("Loaded file: "+file.getName()+" successfully.");
@@ -73,6 +77,7 @@ public class LocalStorageUtils {
      */
     public static void saveData() throws IOException, SecurityException, IllegalStateException {
         if (sfile == null || data == null) throw new IllegalStateException("You must call LocalStorageUtils.loadData(File) first");
+        logger.info("Saving to local file: "+sfile);
 
         try (FileWriter writer = new FileWriter(sfile)) {
             yaml.dump(data, writer);
@@ -107,12 +112,25 @@ public class LocalStorageUtils {
     }
 
     /**
+     * Set an Object in the database and then saves it to the local file. LocalStorageUtils.loadData(File) must be called before calling this method.
+     * @param key The key of the Object
+     * @param value The Object to be stored
+     * @throws IllegalStateException If data is not loaded (LocalStorageUtils.loadData(File) must be called before calling this method)
+     * @throws IOException If saving the file throws an IOException
+     */
+    public static void setObject(String key, Object value) throws IllegalStateException, IOException {
+        setObjectWithoutSave(key, value);
+        logger.info("Setting object: {"+key+","+value+"}");
+        saveData();
+    }
+
+    /**
      * Set an Object in the database. LocalStorageUtils.loadData(File) must be called before calling this method.
      * @param key The key of the Object
      * @param value The Object to be stored
      * @throws IllegalStateException If data is not loaded (LocalStorageUtils.loadData(File) must be called before calling this method)
      */
-    public static void setObject(String key, Object value) throws IllegalStateException {
+    public static void setObjectWithoutSave(String key, Object value) throws IllegalStateException {
         if (data == null) throw new IllegalStateException("You must call LocalStorageUtils.loadData(File) first");
         data.put(key, value);
     }
