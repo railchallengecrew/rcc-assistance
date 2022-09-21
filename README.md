@@ -1,4 +1,6 @@
 # rcc-assistance
+[![CI to Docker Hub](https://github.com/railchallengecrew/rcc-assistance/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/railchallengecrew/rcc-assistance/actions/workflows/docker-publish.yml)
+
 Discord RCC Assistance bot written in Java.
 
 # environment variables
