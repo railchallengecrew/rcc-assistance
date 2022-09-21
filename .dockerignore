@@ -1,2 +1,4 @@
 .gradle
-build
+build/classes
+build/generated
+build/tmp
