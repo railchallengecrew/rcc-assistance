@@ -1,5 +1,4 @@
 # rcc-assistance
-[![Deploy to App Engine](https://github.com/railchallengecrew/rcc-assistance/actions/workflows/gcp-app-engine-deploy.yml/badge.svg?branch=main)](https://github.com/railchallengecrew/rcc-assistance/actions/workflows/gcp-app-engine-deploy.yml)
 
 Discord RCC Assistance bot written in Java.
 
