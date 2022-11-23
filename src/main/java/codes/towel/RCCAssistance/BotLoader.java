@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
+import sun.misc.Signal;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -30,6 +31,8 @@ import java.util.logging.Logger;
 
 public class BotLoader extends ListenerAdapter {
     private static final Logger logger = Logger.getLogger("BotLoader");
+
+    private static JDA jda;
 
     private static final HashMap<String, CommandExecutor> commandMappings = new HashMap<>() {{
         put("freeze", new FreezeCommandsExecutor());
@@ -119,6 +122,15 @@ public class BotLoader extends ListenerAdapter {
     }
 
     public static void main(String[] args) {
+        Signal.handle(new Signal("INT"), signal -> {
+            logger.info("Shutting down...");
+            if (jda != null) {
+                jda.shutdownNow();
+            }
+            logger.info("Goodbye!");
+            System.exit(0);
+        });
+
         logger.info("Setting up storage...");
         setupStorage();
         logger.info("Storage is ready.\nSetting up bot...");
@@ -127,6 +139,8 @@ public class BotLoader extends ListenerAdapter {
     }
 
     public void onReady(@NotNull ReadyEvent e) {
+        jda = e.getJDA();
+
         logger.info("Registering commands...");
 
         e.getJDA().updateCommands().addCommands(
