@@ -12,7 +12,9 @@ import codes.towel.RCCAssistance.command.verification.VerificationListener;
 import codes.towel.RCCAssistance.data.StorageUtils;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -27,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class BotLoader extends ListenerAdapter {
@@ -241,6 +244,30 @@ public class BotLoader extends ListenerAdapter {
         ).complete();
 
         logger.info("Commands registered.");
+
+        if (StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityContent") != null
+            && StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityType") != null) {
+            try {
+                switch ((Integer) StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityType")) {
+                    case 1 -> {
+                        e.getJDA().getPresence().setActivity(Activity.watching(Objects.requireNonNull(StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityContent")).toString()));
+                        logger.info("Loaded Activity from storage.");
+                    }
+                    case 2 -> {
+                        e.getJDA().getPresence().setActivity(Activity.listening(Objects.requireNonNull(StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityContent")).toString()));
+                        logger.info("Loaded Activity from storage.");
+                    }
+                    case 3 -> {
+                        e.getJDA().getPresence().setActivity(Activity.playing(Objects.requireNonNull(StorageUtils.getObject("StatusCommandsExecutor", "Activity", "ActivityContent")).toString()));
+                        logger.info("Loaded Activity from storage.");
+                    }
+                }
+            } catch(NullPointerException ex) {
+                logger.warning("Failed to load Activity from storage. (NullPointerException)");
+                ex.printStackTrace();
+            }
+        }
+
         logger.info("Bot is ready.");
     }
 }
