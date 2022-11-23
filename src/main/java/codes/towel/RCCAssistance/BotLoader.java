@@ -26,9 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 public class BotLoader extends ListenerAdapter {
@@ -122,14 +119,8 @@ public class BotLoader extends ListenerAdapter {
     }
 
     public static void main(String[] args) {
-        ExecutorService threadPool = Executors.newCachedThreadPool();
-
         logger.info("Setting up storage...");
-        Future<?> futureTask = threadPool.submit(BotLoader::setupStorage);
-        System.out.print("Storage [#");
-        while (!futureTask.isDone()) {
-            //System.out.print("#");
-        } System.out.println("#]");
+        setupStorage();
         logger.info("Storage is ready.\nSetting up bot...");
         setupBot();
         logger.info("Bot is awaiting connection...");
