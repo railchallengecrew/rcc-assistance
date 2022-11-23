@@ -213,13 +213,13 @@ public class BotLoader extends ListenerAdapter {
                 // END TICKET COMMANDS
 
 
-                // TODO STATUS COMMANDS (ALL MOD ONLY)
+                // STATUS COMMANDS (ALL MOD ONLY)
 
                 Commands.slash("status_watching", "Change the bot's status to watching.")
                         .addOption(OptionType.STRING, "content", "What is the bot watching?", true),
-                Commands.slash("status_listening", "Change the bot's status to playing.")
+                Commands.slash("status_listening", "Change the bot's status to listening.")
                         .addOption(OptionType.STRING, "content", "What is the bot listening to?", true),
-                Commands.slash("status_playing", "Change the bot's status to listening.")
+                Commands.slash("status_playing", "Change the bot's status to playing.")
                         .addOption(OptionType.STRING, "content", "What is the bot playing?", true)
 
                 // END STATUS COMMANDS
