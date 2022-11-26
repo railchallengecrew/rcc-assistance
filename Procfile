@@ -1,1 +1,0 @@
-worker: java -jar build/libs/RCCAssistance-1.0-all.jar
